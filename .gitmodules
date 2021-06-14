@@ -1,0 +1,3 @@
+[submodule "GuitarD"]
+	path = GuitarD
+	url = https://github.com/TobiasKozel/GuitarD.git

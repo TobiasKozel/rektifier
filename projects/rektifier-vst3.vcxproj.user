@@ -22,13 +22,15 @@
     <LocalDebuggerAttach>true</LocalDebuggerAttach>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LocalDebuggerCommand>$(VST3_64_HOST_PATH)</LocalDebuggerCommand>
+    <LocalDebuggerCommand>C:\Program Files\Image-Line\FL Studio 20\FL64.exe</LocalDebuggerCommand>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerCommandArguments>$(VST3_64_COMMAND_ARGS)</LocalDebuggerCommandArguments>
+    <LocalDebuggerAttach>true</LocalDebuggerAttach>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Tracer|x64'">
-    <LocalDebuggerCommand>$(VST3_64_HOST_PATH)</LocalDebuggerCommand>
+    <LocalDebuggerCommand>C:\Program Files\Image-Line\FL Studio 20\FL64.exe</LocalDebuggerCommand>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerCommandArguments>$(VST3_64_COMMAND_ARGS)</LocalDebuggerCommandArguments>
+    <LocalDebuggerAttach>true</LocalDebuggerAttach>
   </PropertyGroup>
 </Project>

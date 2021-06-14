@@ -388,6 +388,7 @@
     <ClCompile Include="..\..\..\IPlug\IPlugTimer.cpp" />
     <ClCompile Include="..\..\..\IPlug\VST3\IPlugVST3.cpp" />
     <ClCompile Include="..\..\..\IPlug\VST3\IPlugVST3_ProcessorBase.cpp" />
+    <ClCompile Include="..\GuitarD\src\headless\compile_unit\GHeadlessUnit.cpp" />
     <ClCompile Include="..\rektifier.cpp" />
   </ItemGroup>
   <ItemGroup>
