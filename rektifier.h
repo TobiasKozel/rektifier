@@ -1,5 +1,5 @@
 #pragma once
-#define SOUNDWOOFER_NO_API
+//#define SOUNDWOOFER_NO_API
 #include "./config.h"
 #include "./GuitarD/src/headless/compile_unit/GHeadlessUnit.h"
 #include "IPlug_include_in_plug_hdr.h"
@@ -18,27 +18,11 @@ enum EParams
   kParamSag,
   kParamLeft,
   kParamRight,
-  kParamMode,
-  kParamFreq1,
-  kParamFreq2,
   kNumParams
 };
 
 enum EControlTags
 {
-  kCtrlTagDialogResult = 0,
-  kCtrlTagVectorButton,
-  kCtrlTagVectorSliderV,
-  kCtrlTagVectorSliderH,
-  kCtrlTagTabSwitch,
-  kCtrlTagRadioButton,
-  kCtrlTagScope,
-  kCtrlTagDisplay,
-  kCtrlTagMeter,
-  kCtrlTagRTText,
-  kCtrlTagRedLED,
-  kCtrlTagGreenLED,
-  kCtrlTagBlueLED,
   kCtrlTags
 };
 
@@ -133,10 +117,5 @@ public:
   void OnActivate(bool active) override;
 private:
   guitard::GuitarDHeadless mGuitard;
-  IBufferSender<2> mScopeSender;
-  IBufferSender<1> mDisplaySender;
-  IPeakSender<2> mMeterSender;
-  ISender<1> mRTTextSender;
-  ISenderData<1> mLastOutputData = { kCtrlTagRTText, 1, 0 };
 #endif
 };

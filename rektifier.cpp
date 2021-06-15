@@ -22,19 +22,15 @@ rektifier::rektifier(const InstanceInfo& info)
 : Plugin(info, MakeConfig(kNumParams, kNumPresets))
 {
   std::signal(SIGINT, signal_handler);
-  GetParam(kParamGain)->InitGain("Gain");
-  GetParam(kParamCab)->InitPercentage("Cab", 100);
-  GetParam(kParamGate)->InitGain("Gate", -40);
-  GetParam(kParamSag)->InitPercentage("Sag", 50);
-  GetParam(kParamWidth)->InitPercentage("Width", 100);
-  GetParam(kParamRekt)->InitPercentage("Rekt", 100);
+  GetParam(kParamGain)->InitGain("Gain", 0.0, -90, 40);
+  GetParam(kParamGate)->InitGain("Gate", -57.0, -120, 0);
+  GetParam(kParamCab)->InitPercentage("Cab", 100.0);
+  GetParam(kParamSag)->InitPercentage("Sag", 59.67);
+  GetParam(kParamWidth)->InitPercentage("Width", 100.0);
+  GetParam(kParamRekt)->InitPercentage("Rekt", 50.0);
 
   GetParam(kParamLeft)->InitBool("Left", true);
   GetParam(kParamRight)->InitBool("Right", false);
-
-  GetParam(kParamMode)->InitEnum("Mode", 0, 4, "", IParam::kFlagsNone, "", "one", "two", "three", "four");
-  GetParam(kParamFreq1)->InitDouble("Freq 1 - X", 0.5, 0.001, 10., 0.01, "Hz", IParam::kFlagsNone, "", IParam::ShapePowCurve(1.));
-  GetParam(kParamFreq2)->InitDouble("Freq 2 - Y", 0.5, 0.001, 10., 0.01, "Hz", IParam::kFlagsNone, "", IParam::ShapePowCurve(1.));
 
 #if IPLUG_EDITOR // http://bit.ly/2S64BDd
   mMakeGraphicsFunc = [&]() {
@@ -87,15 +83,11 @@ rektifier::rektifier(const InstanceInfo& info)
     //pGraphics->AttachBubbleControl();
 
 
-    //const IText forkAwesomeText{ 16.f, "ForkAwesome" };
-    //const IText bigLabel{ 24, COLOR_WHITE, "Roboto-Regular", EAlign::Near, EVAlign::Top, 0 };
-    //const IText fontaudioText{ 32.f, "Fontaudio" };
-
   };
 #endif
 
 #if IPLUG_DSP
-  mGuitard.setConfig(60000, 2, 2);
+  mGuitard.setConfig(48000, 2, 2);
   mGuitard.load(preset);
 #endif
 }
@@ -113,14 +105,6 @@ void rektifier::OnUIClose()
 #if IPLUG_DSP
 void rektifier::OnIdle() {
   return;
-  mScopeSender.TransmitData(*this);
-  mMeterSender.TransmitData(*this);
-  mRTTextSender.TransmitData(*this);
-  mDisplaySender.TransmitData(*this);
-
-  float val = std::fabs(mLastOutputData.vals[0]);
-  //SendControlValueFromDelegate(kCtrlTagRedLED, std::copysign(val, mLastOutputData.vals[0]));
-  //SendControlValueFromDelegate(kCtrlTagGreenLED, std::copysign(val, -mLastOutputData.vals[0]));
 }
 
 void rektifier::OnReset() {
@@ -167,15 +151,37 @@ void rektifier::ProcessBlock(sample** inputs, sample** outputs, int nFrames)
     }
   }
 
+  const double cab = GetParam(kParamCab)->GetNormalized();
+  mGuitard.setParam(36, cab);
+
+  const double sag = GetParam(kParamSag)->GetNormalized();
+  mGuitard.setParam(46, sag);
+
+  const double gain = GetParam(kParamGain)->GetNormalized();
+  mGuitard.setParam(33, gain);
+
+  const double gate = GetParam(kParamGate)->GetNormalized();
+  mGuitard.setParam(52, gate);
+
+  const double rekt = GetParam(kParamRekt)->GetNormalized();
+
+  double pan1;
+  double pan2;
+  double mix;
+  if (rekt <= 0.5) {
+    pan1 = -rekt + 0.5;
+    pan2 = 1.0;
+    mix = rekt * 1.6;
+  } else {
+    pan1 = 0.0;
+    pan2 = -0.6 * rekt + 1.3;
+    mix = rekt * 0.4 + 0.6;
+  }
+
+  mGuitard.setParam(20, pan1);
+  mGuitard.setParam(21, pan2);
+  mGuitard.setParam(22, mix);
+
   mGuitard.process(const_cast<const sample**>(inputs), outputs, nFrames);
-
-  //mDisplaySender.ProcessBlock(outputs, nFrames, kCtrlTagDisplay);
-  //mScopeSender.ProcessBlock(outputs, nFrames, kCtrlTagScope);
-  //mMeterSender.ProcessBlock(outputs, nFrames, kCtrlTagMeter);
-
-  //mLastOutputData.vals[0] = (float) outputs[0][0]; // just take first value in block
-
-  //mRTTextSender.PushData(mLastOutputData);
-
 }
 #endif
