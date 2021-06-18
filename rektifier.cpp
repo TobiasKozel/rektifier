@@ -4,6 +4,7 @@
 #include "IconsForkAwesome.h"
 #include "IconsFontaudio.h"
 #include "./preset.h"
+#include "./ui.h"
 
 #include <csignal>
 
@@ -29,8 +30,7 @@ rektifier::rektifier(const InstanceInfo& info)
   GetParam(kParamWidth)->InitPercentage("Width", 100.0);
   GetParam(kParamRekt)->InitPercentage("Rekt", 50.0);
 
-  GetParam(kParamLeft)->InitBool("Left", true);
-  GetParam(kParamRight)->InitBool("Right", false);
+  GetParam(kParamInput)->InitEnum("Input", 2, { "Right", "Stereo", "Left" });
 
 #if IPLUG_EDITOR // http://bit.ly/2S64BDd
   mMakeGraphicsFunc = [&]() {
@@ -49,31 +49,32 @@ rektifier::rektifier(const InstanceInfo& info)
     pGraphics->AttachControl(pBG);
 
     const IBitmap knobBitmap = pGraphics->LoadBitmap(PNGKNOB_FN, 60);
-    const IBitmap knobBitmapSingle = pGraphics->LoadBitmap(PNGKNOB_FN);
-    const IBitmap switchBitmap = pGraphics->LoadBitmap((PNGSWITCH_FN), 2, true);
+    const IBitmap switchBitmap = pGraphics->LoadBitmap((PNGSWITCH_FN), 3);
     
-    auto knobOffset = [](int x, int y) {
+    const auto knobOffset = [](int x, int y) {
       const int knobWidth = 130;
       const int knobHeight = 130;
       int w2 = knobWidth / 2;
       int h2 = knobHeight / 2;
       IRECT ret = IRECT(x - w2, y - h2, x + w2, y + h2);
-      ret.Offset(0, 10, 0, 10);
+      ret.Translate(2, 17);
       return ret;
     };
 
     const IRECT size = { 0, 0, 256, 256 };
+    
 
-    pGraphics->AttachControl(new FittedBitMapKnob(knobOffset(260, 56), knobBitmap, size, kParamGate), kNoTag, "general");
-    pGraphics->AttachControl(new FittedBitMapKnob(knobOffset(420, 56), knobBitmap, size, kParamCab), kNoTag, "general");
-    pGraphics->AttachControl(new FittedBitMapKnob(knobOffset(585, 56), knobBitmap, size, kParamWidth), kNoTag, "general");
+    //pGraphics->AttachControl(new FittedBitMapKnob(knobOffset(260, 56), knobBitmap, size, kParamGate), kNoTag, "general");
+    //pGraphics->AttachControl(new FittedBitMapKnob(knobOffset(420, 56), knobBitmap, size, kParamCab), kNoTag, "general");
+    //pGraphics->AttachControl(new FittedBitMapKnob(knobOffset(585, 56), knobBitmap, size, kParamWidth), kNoTag, "general");
 
-    pGraphics->AttachControl(new FittedBitMapKnob(knobOffset(260, 267), knobBitmap, size, kParamGain), kNoTag, "distortion");
-    pGraphics->AttachControl(new FittedBitMapKnob(knobOffset(420, 267), knobBitmap, size, kParamRekt), kNoTag, "distortion");
-    pGraphics->AttachControl(new FittedBitMapKnob(knobOffset(585, 267), knobBitmap, size, kParamSag), kNoTag, "distortion");
+    //pGraphics->AttachControl(new FittedBitMapKnob(knobOffset(260, 267), knobBitmap, size, kParamGain), kNoTag, "distortion");
+    //pGraphics->AttachControl(new FittedBitMapKnob(knobOffset(420, 267), knobBitmap, size, kParamRekt), kNoTag, "distortion");
+    //pGraphics->AttachControl(new FittedBitMapKnob(knobOffset(585, 267), knobBitmap, size, kParamSag), kNoTag, "distortion");
 
-    pGraphics->AttachControl(new IBSwitchControl({ 150, 26, 193, 66 }, switchBitmap, kParamLeft), kNoTag, "input");
-    pGraphics->AttachControl(new IBSwitchControl({ 150, 73, 193, 141 }, switchBitmap, kParamRight), kNoTag, "input");
+    IRECT switchPost = { 0, 0, 200 / 5, 500 / 5 };
+    switchPost.Translate(150, 30);
+    pGraphics->AttachControl(new FittedBitMapSwitch(switchPost, switchBitmap, { 0, 0, 200, 500 } , kParamInput), kNoTag, "input");
     
     pGraphics->EnableMouseOver(true);
     pGraphics->EnableMultiTouch(true);
@@ -132,8 +133,9 @@ void rektifier::ProcessBlock(sample** inputs, sample** outputs, int nFrames)
   }
 
 
-  const bool left = 0.5 <= GetParam(kParamLeft)->Value();
-  const bool right = 0.5 <= GetParam(kParamRight)->Value();
+  const double input = GetParam(kParamInput)->Value();
+  const double left = input < 0.33;
+  const double right = 0.66 < input;
 
   if (nChansIn == 1) {
     assert(false);
@@ -164,6 +166,8 @@ void rektifier::ProcessBlock(sample** inputs, sample** outputs, int nFrames)
   mGuitard.setParam(52, gate);
 
   const double rekt = GetParam(kParamRekt)->GetNormalized();
+
+  const double width = GetParam(kParamWidth)->GetNormalized();
 
   double pan1;
   double pan2;
