@@ -108,7 +108,8 @@ public:
   }
 
   void OnMouseUp(float x, float y, const IMouseMod& mod) override {
-
+    mMouseDown = false;
+    SetDirty(true);
   }
   void OnMouseDrag(float x, float y, float dX, float dY, const IMouseMod& mod) override { }
   void OnMouseWheel(float x, float y, const IMouseMod& mod, float d) override { }

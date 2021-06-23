@@ -27,7 +27,7 @@ rektifier::rektifier(const InstanceInfo& info)
   GetParam(kParamGate)->InitGain("Gate", -57.0, -120, 0);
   GetParam(kParamCab)->InitPercentage("Cab", 100.0);
   GetParam(kParamSag)->InitPercentage("Sag", 59.67);
-  GetParam(kParamWidth)->InitPercentage("Width", 100.0);
+  GetParam(kParamWidth)->InitPercentage("Width", 50.0);
   GetParam(kParamRekt)->InitPercentage("Rekt", 50.0);
 
   GetParam(kParamInput)->InitEnum("Input", 2, { "Right", "Stereo", "Left" });
@@ -64,13 +64,13 @@ rektifier::rektifier(const InstanceInfo& info)
     const IRECT size = { 0, 0, 256, 256 };
     
 
-    //pGraphics->AttachControl(new FittedBitMapKnob(knobOffset(260, 56), knobBitmap, size, kParamGate), kNoTag, "general");
-    //pGraphics->AttachControl(new FittedBitMapKnob(knobOffset(420, 56), knobBitmap, size, kParamCab), kNoTag, "general");
-    //pGraphics->AttachControl(new FittedBitMapKnob(knobOffset(585, 56), knobBitmap, size, kParamWidth), kNoTag, "general");
+    pGraphics->AttachControl(new FittedBitMapKnob(knobOffset(260, 56), knobBitmap, size, kParamGate), kNoTag, "general");
+    pGraphics->AttachControl(new FittedBitMapKnob(knobOffset(420, 56), knobBitmap, size, kParamCab), kNoTag, "general");
+    pGraphics->AttachControl(new FittedBitMapKnob(knobOffset(585, 56), knobBitmap, size, kParamWidth), kNoTag, "general");
 
-    //pGraphics->AttachControl(new FittedBitMapKnob(knobOffset(260, 267), knobBitmap, size, kParamGain), kNoTag, "distortion");
-    //pGraphics->AttachControl(new FittedBitMapKnob(knobOffset(420, 267), knobBitmap, size, kParamRekt), kNoTag, "distortion");
-    //pGraphics->AttachControl(new FittedBitMapKnob(knobOffset(585, 267), knobBitmap, size, kParamSag), kNoTag, "distortion");
+    pGraphics->AttachControl(new FittedBitMapKnob(knobOffset(260, 267), knobBitmap, size, kParamGain), kNoTag, "distortion");
+    pGraphics->AttachControl(new FittedBitMapKnob(knobOffset(420, 267), knobBitmap, size, kParamRekt), kNoTag, "distortion");
+    pGraphics->AttachControl(new FittedBitMapKnob(knobOffset(585, 267), knobBitmap, size, kParamSag), kNoTag, "distortion");
 
     IRECT switchPost = { 0, 0, 200 / 5, 500 / 5 };
     switchPost.Translate(150, 30);
@@ -134,8 +134,8 @@ void rektifier::ProcessBlock(sample** inputs, sample** outputs, int nFrames)
 
 
   const double input = GetParam(kParamInput)->Value();
-  const double left = input < 0.33;
-  const double right = 0.66 < input;
+  const double left = input > 0.33;
+  const double right = 0.66 > input;
 
   if (nChansIn == 1) {
     assert(false);
@@ -185,6 +185,8 @@ void rektifier::ProcessBlock(sample** inputs, sample** outputs, int nFrames)
   mGuitard.setParam(20, pan1);
   mGuitard.setParam(21, pan2);
   mGuitard.setParam(22, mix);
+  mGuitard.setParam(74, width * 0.9);
+  mGuitard.setParam(72, iplug::Clip(float(1.0 - width * 0.5), 0.5f, 1.0f));
 
   mGuitard.process(const_cast<const sample**>(inputs), outputs, nFrames);
 }
