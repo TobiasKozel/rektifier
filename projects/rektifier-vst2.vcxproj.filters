@@ -50,6 +50,7 @@
     <ClCompile Include="..\..\..\IGraphics\Drawing\IGraphicsSkia.cpp">
       <Filter>IGraphics\Drawing</Filter>
     </ClCompile>
+    <ClCompile Include="..\GuitarD\src\headless\compile_unit\GHeadlessUnit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="../config.h" />
