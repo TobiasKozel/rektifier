@@ -189,5 +189,11 @@ void rektifier::ProcessBlock(sample** inputs, sample** outputs, int nFrames)
   mGuitard.setParam(72, iplug::Clip(float(1.0 - width * 0.5), 0.5f, 1.0f));
 
   mGuitard.process(const_cast<const sample**>(inputs), outputs, nFrames);
+
+  for (int c = 0; c < nChansOut; c++) {
+    for (int i = 0; i < nFrames; i++) {
+      outputs[c][i] *= 0.5;
+    }
+  }
 }
 #endif

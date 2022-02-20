@@ -26,9 +26,12 @@ public:
 class FittedBitMapKnob : public IKnobControlBase {
   IBitmap mBitmap;
   IRECT mFraming;
+
+protected:
   int mWidth;
   int mHeight;
   int mFrames;
+
 public:
   FittedBitMapKnob(
     const IRECT& bounds, const IBitmap& bitmap,
@@ -52,6 +55,7 @@ public:
 
     const double val = GetValue();
     i = int(val * double(mFrames - 1));
+    DBGMSG("%f\t%i", val, i);
     x = i % mWidth;
     y = (i - x) / mHeight;
 
@@ -81,37 +85,47 @@ public:
 };
 
 class FittedBitMapSwitch : public FittedBitMapKnob {
+  float mXDown = 0;
+  float mYDown = 0;
 public:
   FittedBitMapSwitch(
     const IRECT& bounds, const IBitmap& bitmap,
     const IRECT& framing, int paramIdx
   ) : FittedBitMapKnob(bounds, bitmap, framing, paramIdx) {
-
+    
   }
 
-  void OnMouseDown(float x, float y, const IMouseMod& mod) override {
-    double val = GetValue();
-    if (val < 0.3) {
-      SetValue(0.5);
-      DBGMSG("0.5");
-    } else if (val < 0.6) {
-      SetValue(1.0);
-      DBGMSG("1.0");
+  // Click toggle is buggy for some reason
+  //void OnMouseDown(float x, float y, const IMouseMod& mod) override {
+  //  mXDown = x;
+  //  mYDown = y;
+  //  FittedBitMapKnob::OnMouseDown(x, y, mod);
+  //}
 
-    } else {
-      SetValue(0.0);
-      DBGMSG("0.0");
+  //void OnMouseUp(float x, float y, const IMouseMod& mod) override {
+  //  FittedBitMapKnob::OnMouseUp(x, y, mod);
+  //  if ((abs(x - mXDown) + abs(y - mYDown)) < 20) {
+  //    const int oldVal = GetValue() * (mFrames - 1);
+  //    const int newVal = (oldVal + 1) % mFrames;
+  //    SetValue(newVal / double(mFrames - 1));
+  //    SetDirty(false);
+  //  }
+  //}
+
+  // Just invert the direction
+  void OnMouseDrag(float x, float y, float dX, float dY, const IMouseMod& mod) override {
+    FittedBitMapKnob::OnMouseDrag(x, y, dX, -dY, mod);
+  }
+  void OnMouseWheel(float x, float y, const IMouseMod& mod, float d) override {
+    int oldVal = GetValue() * (mFrames - 1);
+    if (0 < d) {
+      oldVal -= 1;
     }
-
-    mMouseDown = true;
-    SetDirty(true);
+    else {
+      oldVal += 1;
+    }
+    oldVal = wdl_clamp(oldVal, 0, (mFrames - 1));
+    SetValue(oldVal / double(mFrames - 1));
+    SetDirty();
   }
-
-  void OnMouseUp(float x, float y, const IMouseMod& mod) override {
-    mMouseDown = false;
-    SetDirty(true);
-  }
-  void OnMouseDrag(float x, float y, float dX, float dY, const IMouseMod& mod) override { }
-  void OnMouseWheel(float x, float y, const IMouseMod& mod, float d) override { }
-  
 };
