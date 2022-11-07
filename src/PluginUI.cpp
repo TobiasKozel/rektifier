@@ -71,11 +71,16 @@ protected:
 	// }
 
 	bool onKeyboard(const KeyboardEvent& ev) override {
+		if (ev.keycode == 9 && !ev.press) {
+			getWindow().close();
+			return true;
+		}
 		if (ev.mod & kModifierControl && !ev.press) {
 			if (ev.key == 'c') {
 			}
 			return true;
 		}
+		return false;
 	}
 
 

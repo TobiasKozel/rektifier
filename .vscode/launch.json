@@ -1,0 +1,32 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Linux Reaper Code LLDB",
+            "program": "/usr/bin/reaper",
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Linux Jack Code LLDB",
+            "program": "./build/bin/rektifier-plugin",
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Linux Jack GDB",
+            "type": "gdb",
+            "request": "launch",
+            "target": "./build/bin/rektifier-plugin",
+            "cwd": "${workspaceRoot}",
+            "valuesFormatting": "parseText"
+        }
+    ]
+}

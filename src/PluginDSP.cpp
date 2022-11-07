@@ -48,7 +48,7 @@ protected:
 			case kParamGate:
 				parameter.ranges.min = DB_MIN;
 				parameter.ranges.max = DB_MAX;
-				parameter.ranges.def = -70.0f;
+				parameter.ranges.def = mGate;
 				parameter.name = "Noise Gate";
 				parameter.shortName = "Gate";
 				parameter.symbol = "gate";
@@ -57,37 +57,38 @@ protected:
 			case kParamGain:
 				parameter.ranges.min = DB_MIN;
 				parameter.ranges.max = DB_MAX;
-				parameter.ranges.def = 0.0f;
+				parameter.ranges.def = mGain;
 				parameter.name = "Pre Gain";
 				parameter.shortName = "gain";
 				parameter.symbol = "gain";
 				parameter.unit = "dB";
 				break;
 			case kParamWidth:
-				parameter.ranges.def = 50.f;
+				parameter.ranges.def = mWidth;
 				parameter.name = "Stereo Width";
 				parameter.shortName = "Width";
 				parameter.symbol = "width";
 				break;
 			case kParamCab:
-				parameter.ranges.def = 100.f;
+				parameter.ranges.def = mCab;
 				parameter.name = "Guitar Cab Mix";
 				parameter.shortName = "Cab";
 				parameter.symbol = "cab";
 				break;
 			case kParamRekt:
-				parameter.ranges.def = 50.f;
+				parameter.ranges.def = mRekt;
 				parameter.name = "Rekt";
 				parameter.shortName = "Rekt";
 				parameter.symbol = "rekt";
 				break;
 			case kParamSag:
-				parameter.ranges.def = 59.67f;
+				parameter.ranges.def = mSag;
 				parameter.name = "Amplifier Sag";
 				parameter.shortName = "Sag";
 				parameter.symbol = "sag";
 				break;
 			case kParamInput:
+				parameter.ranges.def = mInput;
 				parameter.name = "Input channels (L/R/L+R)";
 				parameter.shortName = "Input";
 				parameter.symbol = "input";
@@ -114,14 +115,16 @@ protected:
 
 	void setParameterValue(uint32_t index, float value) override {
 		switch (index) {
-			case kParamGate:	mGate	= value;
-			case kParamGain:	mGain	= value;
-			case kParamWidth:	mWidth	= value;
-			case kParamCab:		mCab	= value;
-			case kParamRekt:	mRekt	= value;
-			case kParamSag:		mSag	= value;
-			case kParamInput:	mInput	= value;
-			default: assert(false); break;
+			case kParamGate:	mGate	= value; break;
+			case kParamGain:	mGain	= value; break;
+			case kParamWidth:	mWidth	= value; break;
+			case kParamCab:		mCab	= value; break;
+			case kParamRekt:	mRekt	= value; break;
+			case kParamSag:		mSag	= value; break;
+			case kParamInput:	mInput	= value; break;
+			default:
+				assert(false);
+				break;
 		}
 	}
 
@@ -229,13 +232,13 @@ protected:
 
 private:
 	guitard::GuitarDHeadless mGuitard;
-	float mGate;
-	float mGain;
-	float mWidth;
-	float mCab;
-	float mRekt;
-	float mSag;
-	float mInput;
+	float mGate = -70.0f;
+	float mGain = 0.f;
+	float mWidth = 50.f;
+	float mCab = 100.f;
+	float mRekt = 50.f;
+	float mSag = 59.67f;
+	float mInput = 0.f;
 };
 
 Plugin* createPlugin() { return new PluginDSP(); }
