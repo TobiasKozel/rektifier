@@ -23,7 +23,7 @@
 #endif
 
 #define DB_MIN -90.f
-#define DB_MAX 30.f
+#define DB_MAX 40.f
 
 START_NAMESPACE_DISTRHO
 

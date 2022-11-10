@@ -3,7 +3,7 @@
 
 #define DISTRHO_PLUGIN_LICENSE            "WTFPL"
 #define DISTRHO_PLUGIN_NAME               "rektifier"
-#define DISTRHO_PLUGIN_BRAND              "CAUDIO"
+#define DISTRHO_PLUGIN_BRAND              "Classified Audio"
 
 #define DISTRHO_PLUGIN_NUM_INPUTS         2
 #define DISTRHO_PLUGIN_NUM_OUTPUTS        2
