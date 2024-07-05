@@ -253,8 +253,8 @@ sudo rm -R -f installer/build-mac/
 
 if [ $DEMO == 1 ]
 then
-git checkout installer/IPlugControls.iss
-git checkout installer/IPlugControls.pkgproj
+git checkout installer/rektifier.iss
+git checkout installer/rektifier.pkgproj
 git checkout resources/img/AboutBox.png
 fi
 

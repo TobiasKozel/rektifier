@@ -32,22 +32,22 @@
 					<key>description</key>
 					<string>rektifier</string>
 					<key>factoryFunction</key>
-					<string>IPlugAUViewController</string>
+					<string>IPlugAUViewController_vrektifier</string>
 					<key>manufacturer</key>
 					<string>Acme</string>
 					<key>name</key>
-					<string>classifiedaudio: rektifier</string>
+					<string>.: rektifier</string>
 					<key>sandboxSafe</key>
 					<true/>
 					<key>subtype</key>
-					<string>Ipct</string>
+					<string>Ipef</string>
 					<key>tags</key>
 					<array>
-						<string>Synth</string>
-						<string>size:{1024,768}</string>
+						<string>Effects</string>
+						<string>size:{600,600}</string>
 					</array>
 					<key>type</key>
-					<string>aumu</string>
+					<string>aufx</string>
 					<key>version</key>
 					<integer>65536</integer>
 				</dict>

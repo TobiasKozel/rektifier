@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 # this script will update the versions in packages and innosetup installer files to match that in config.h
 
@@ -33,10 +33,11 @@ def main():
 
 # MAC INSTALLER
 
-  print "Updating Mac Installer version info..."
+  print("Updating Mac Installer version info...")
   
   plistpath = projectpath + "/installer/" + config['BUNDLE_NAME'] + ".pkgproj"
-  installer = plistlib.readPlist(plistpath)
+  with open(plistpath, 'rb') as fp:
+    installer = plistlib.load(fp)
   
   # range  = number of items in the installer (VST 2, VST 3, app, audiounit, aax)
   for x in range(0,5):
@@ -49,20 +50,21 @@ def main():
     installer['PROJECT']['PROJECT_PRESENTATION']['TITLE']['LOCALIZATIONS'][0]['VALUE'] = config['BUNDLE_NAME']
     installer['PROJECT']['PROJECT_PRESENTATION']['INTRODUCTION']['LOCALIZATIONS'][0]['VALUE']['PATH'] = "intro.rtf"
 
-  plistlib.writePlist(installer, plistpath)
-#   replacestrs(plistpath, "//Apple//", "//Apple Computer//");
+  with open(plistpath, 'wb') as fp:
+    plistlib.dump(installer, fp)
+#   replacestrs(plistpath, "//Apple//", "//Apple Computer//")
   
 # WIN INSTALLER
-  print "Updating Windows Installer version info..."
+  print("Updating Windows Installer version info...")
   
   for line in fileinput.input(projectpath + "/installer/" + config['BUNDLE_NAME'] + ".iss",inplace=1):
     if "AppVersion" in line:
       line="AppVersion=" + config['FULL_VER_STR'] + "\n"
     if "OutputBaseFilename" in line:
       if demo:
-        line="OutputBaseFilename=IPlugControls Demo Installer\n"
+        line="OutputBaseFilename=rektifier Demo Installer\n"
       else:
-        line="OutputBaseFilename=IPlugControls Installer\n"
+        line="OutputBaseFilename=rektifier Installer\n"
         
     if 'Source: "readme' in line:
      if demo:
@@ -72,15 +74,15 @@ def main():
     
     if "WelcomeLabel1" in line:
      if demo:
-       line="WelcomeLabel1=Welcome to the IPlugControls Demo installer\n"
+       line="WelcomeLabel1=Welcome to the rektifier Demo installer\n"
      else:
-       line="WelcomeLabel1=Welcome to the IPlugControls installer\n"
+       line="WelcomeLabel1=Welcome to the rektifier installer\n"
        
     if "SetupWindowTitle" in line:
      if demo:
-       line="SetupWindowTitle=IPlugControls Demo installer\n"
+       line="SetupWindowTitle=rektifier Demo installer\n"
      else:
-       line="SetupWindowTitle=IPlugControls installer\n"
+       line="SetupWindowTitle=rektifier installer\n"
        
     sys.stdout.write(line)
     

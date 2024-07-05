@@ -15,16 +15,16 @@ def  main():
   else:
     demo=int(sys.argv[1])
    
-  installer = "\installer\IPlugControls Installer.exe"
+  installer = "\installer\rektifier Installer.exe"
    
   if demo:
-    installer = "\installer\IPlugControls Demo Installer.exe"
+    installer = "\installer\rektifier Demo Installer.exe"
    
   FILES_TO_ZIP = [
     projectpath + installer,
     projectpath + "\installer\changelog.txt",
     projectpath + "\installer\known-issues.txt",
-    projectpath + "\manual\IPlugControls manual.pdf" 
+    projectpath + "\manual\rektifier manual.pdf" 
   ]
 
   # extract values from config.h
@@ -43,10 +43,10 @@ def  main():
 
   FULLVERSIONSTR = MAJORSTR + "." + MINORSTR + "." + BUGFIXSTR
 
-  ZIPNAME = "IPlugControls-v" + FULLVERSIONSTR + "-win.zip"
+  ZIPNAME = "rektifier-v" + FULLVERSIONSTR + "-win.zip"
   
   if demo:
-    ZIPNAME = "IPlugControls-v" + FULLVERSIONSTR + "-win-demo.zip"
+    ZIPNAME = "rektifier-v" + FULLVERSIONSTR + "-win-demo.zip"
   
   zf = zipfile.ZipFile(projectpath + "\installer\/" + ZIPNAME, mode="w")
 

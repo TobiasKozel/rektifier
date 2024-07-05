@@ -20,7 +20,7 @@ void signal_handler(int signal) {
 
 
 rektifier::rektifier(const InstanceInfo& info)
-: Plugin(info, MakeConfig(kNumParams, kNumPresets))
+: iplug::Plugin(info, MakeConfig(kNumParams, kNumPresets))
 {
   std::signal(SIGINT, signal_handler);
   GetParam(kParamGain)->InitGain("Gain", 0.0, -90, 40);
